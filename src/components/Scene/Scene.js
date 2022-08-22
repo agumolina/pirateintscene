@@ -39,7 +39,7 @@ const Scene = () => {
     useEffect(() => {
         initScene(mountRef);
         loadGroups()
-        loadModels("./model/ship_dark.gltf", "ship")
+        loadModels("./model/ship_dark.glb", "ship")
         loadModels("./model/palm_short.gltf", "palms")
         loadModels("./model/palm_detailed_long.gltf", "palms")
         loadModels("./model/formation_stone.gltf", "stones")

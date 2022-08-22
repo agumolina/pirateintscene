@@ -2,7 +2,7 @@ import * as THREE from "three"
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
 import {TransformControls} from "three/examples/jsm/controls/TransformControls"
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader"
-//import * as dat from "dat.gui"
+import * as dat from "dat.gui"
 import {gsap} from "gsap"
 import {Water} from "three/examples/jsm/objects/Water.js"
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
@@ -19,7 +19,7 @@ const timeline = new gsap.timeline({
     }
 })
 
-// Controls
+// Controls Debugging
 //const gui = new dat.GUI({width: 600})
 
 
@@ -75,6 +75,8 @@ window.addEventListener("resize", resize);
 const orbitControls = new OrbitControls(camera,renderer.domElement)
 orbitControls.enableDamping = true
 orbitControls.target.set(1.15017,0.8066,0.46303)
+orbitControls.enableZoom = false
+
 
 
 // Transform Controls
@@ -99,7 +101,6 @@ transformControls.setMode("translate")
 
 // Animate the scene
 const clock = new THREE.Clock()
-
 const animate = () => {
     const elapsedTime = clock.getElapsedTime() // Tiempo transcurrido desde creación del clock
     const movement = Math.sin(elapsedTime)
@@ -117,6 +118,9 @@ const animate = () => {
 
         floatPoint.element.style.transform = `translate(${positionX}px, ${positionY}px)`
     }
+
+    // Movement of camera
+    //camera.position.y = window.pageYOffset * 0.09
 
     // Limit of camera
     if(camera.position.x > 50){
@@ -192,6 +196,45 @@ export const resetAnimation = () => {
 }
 
 
+// Controls
+let directionShip = 0
+
+window.addEventListener("keydown", function(event){
+    // Movement Z
+    if(event.key == "ArrowUp" | event.key == "keyW"){
+        console.log("Up")
+        //objectsGroups.ship.position.z += 0.1
+        directionShip = 0
+    }
+    if(event.key == "ArrowDown"){
+        console.log("Down")
+        //objectsGroups.ship.position.z -= 0.1
+        directionShip = Math.PI
+    }
+})
+
+window.addEventListener("keydown", function(event){
+    // Movement X
+    if(event.key == "ArrowLeft"){
+        console.log("Left")
+        /*objectsGroups.ship.rotation.set(
+            objectsGroups.ship.rotation._x,
+            objectsGroups.ship.rotation._y + 0.03,
+            objectsGroups.ship.rotation._z
+        )*/
+    }
+    if(event.key == "ArrowRight"){
+        console.log("Right")
+        /*objectsGroups.ship.rotation.set(
+            objectsGroups.ship.rotation._x,
+            objectsGroups.ship.rotation._y - 0.03,
+            objectsGroups.ship.rotation._z
+        )*/
+    }
+})
+
+
+
 // Loader
 const loadingManager = new THREE.LoadingManager(()=> {
     castShadow()
@@ -231,7 +274,7 @@ export const loadModels = (path, group) => {
 
 // Ship
 objectsGroups.ship.scale.set(0.3781,0.3781,0.3781)
-objectsGroups.ship.position.set(0,0,0)
+objectsGroups.ship.position.set(-1.65482,0,0)
 objectsGroups.ship.rotation.set(0,2.8953,0)
 
 // Tower
@@ -508,7 +551,14 @@ const cubeForDebugging = new THREE.Mesh(
     .onChange(() => {
       camera.updateProjectionMatrix()
     })
-*/
+
+gui.add(objectsGroups.ship.position, "x")
+    .name("ship x")
+    .min(-50)
+    .max(20)
+    .step(0.00001)
+
+    */
 
 
 
