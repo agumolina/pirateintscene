@@ -42,6 +42,19 @@ const animations = {
             z: 1.57965
         },
         zoom: 2.08
+    },
+    shovel: {
+        target: {
+            x: 3.61351,
+            y: 0.5,
+            z: 0.84595
+        },
+        camera: {
+            x: 2.0473,
+            y: 0.75,
+            z: 2.4365
+        },
+        zoom: 0.71536
     }
 }
 
@@ -62,6 +75,7 @@ const Scene = () => {
         loadModels("./model/map.glb","map")
         loadModels("./model/historia_map.glb","history")
         loadModels("./model/x_map.glb","xMap")
+        loadModels("./model/shovel.glb","shovel")
         fetchFloatPointsElements()
 
         //loadGui()
@@ -119,6 +133,21 @@ const Scene = () => {
                     </FloatPointLabel>
                     <FloatPointText className="float-point-text">
                         Mapa del tesoro
+                    </FloatPointText>
+                </FloatPoint>
+                <FloatPoint className="float-point-4">
+                    <FloatPointLabel onClick={() => {
+                        gsapAnimation(
+                            animations.shovel.target,
+                            animations.shovel.camera,
+                            animations.shovel.zoom
+                            )
+                        window.open('https://arvo.ar')
+                    }}>
+                        4
+                    </FloatPointLabel>
+                    <FloatPointText className="float-point-text">
+                        arvo Pagina Oficial
                     </FloatPointText>
                 </FloatPoint>
                 
