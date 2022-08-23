@@ -29,6 +29,19 @@ const animations = {
             z: 10
         },
         zoom: 1.61119
+    },
+    treasure: {
+        target: {
+            x: 0.72071,
+            y: 0.20534,
+            z: -0.13824
+        },
+        camera: {
+            x: 2.3527,
+            y: 4.84365,
+            z: 1.57965
+        },
+        zoom: 2.08
     }
 }
 
@@ -46,6 +59,9 @@ const Scene = () => {
         loadModels("./model/formation_stone.gltf", "stones")
         loadModels("./model/tower.gltf", "tower")
         loadModels("./model/rockFlat.glb","beach")
+        loadModels("./model/map.glb","map")
+        loadModels("./model/historia_map.glb","history")
+        loadModels("./model/x_map.glb","xMap")
         fetchFloatPointsElements()
 
         //loadGui()
@@ -92,11 +108,17 @@ const Scene = () => {
                     </FloatPointText>
                 </FloatPoint>
                 <FloatPoint className="float-point-3">
-                    <FloatPointLabel>
+                    <FloatPointLabel onClick={() => {
+                        gsapAnimation(
+                            animations.treasure.target,
+                            animations.treasure.camera,
+                            animations.treasure.zoom
+                            )
+                    }}>
                         3
                     </FloatPointLabel>
                     <FloatPointText className="float-point-text">
-                        Busqueda del tesoro: Proximamente!
+                        Mapa del tesoro
                     </FloatPointText>
                 </FloatPoint>
                 

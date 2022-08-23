@@ -6,6 +6,7 @@ import * as dat from "dat.gui"
 import {gsap} from "gsap"
 import {Water} from "three/examples/jsm/objects/Water.js"
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
+import {FontLoader} from "three/examples/jsm/loaders/FontLoader.js"
 
 
 // Global variables
@@ -20,7 +21,7 @@ const timeline = new gsap.timeline({
 })
 
 // Controls Debugging
-//const gui = new dat.GUI({width: 600})
+const gui = new dat.GUI({width: 600})
 
 
 // Objects of Scene
@@ -30,6 +31,9 @@ const objectsGroups = {
     tower: new THREE.Group(),
     stones: new THREE.Group(),
     beach: new THREE.Group(),
+    map: new THREE.Group(),
+    history: new THREE.Group(),
+    xMap: new THREE.Group()
 }
 
 // FloatPoints
@@ -59,12 +63,6 @@ renderer.setPixelRatio(2) // Recomendado: 1 o 2
 //Resize canvas
 const resize = () => {
     renderer.setSize(currentRef.clientWidth, currentRef.clientHeight);
-    /* if(currentRef.clientWidth < 1000){
-        zoomResponsive(0.5)
-    }
-    else{
-        zoomResponsive(1.0)
-    }*/
     camera.aspect = currentRef.clientWidth / currentRef.clientHeight;
     camera.updateProjectionMatrix();
     resetAnimation()
@@ -75,7 +73,7 @@ window.addEventListener("resize", resize);
 const orbitControls = new OrbitControls(camera,renderer.domElement)
 orbitControls.enableDamping = true
 orbitControls.target.set(1.15017,0.8066,0.46303)
-orbitControls.enableZoom = false
+orbitControls.enableZoom = true
 
 
 
@@ -197,6 +195,7 @@ export const resetAnimation = () => {
 
 
 // Controls
+/*
 let directionShip = 0
 
 window.addEventListener("keydown", function(event){
@@ -217,21 +216,22 @@ window.addEventListener("keydown", function(event){
     // Movement X
     if(event.key == "ArrowLeft"){
         console.log("Left")
-        /*objectsGroups.ship.rotation.set(
+        objectsGroups.ship.rotation.set(
             objectsGroups.ship.rotation._x,
             objectsGroups.ship.rotation._y + 0.03,
             objectsGroups.ship.rotation._z
-        )*/
+        )
     }
     if(event.key == "ArrowRight"){
         console.log("Right")
-        /*objectsGroups.ship.rotation.set(
+        objectsGroups.ship.rotation.set(
             objectsGroups.ship.rotation._x,
             objectsGroups.ship.rotation._y - 0.03,
             objectsGroups.ship.rotation._z
-        )*/
+
     }
 })
+*/
 
 
 
@@ -259,6 +259,9 @@ export const loadGroups = () => {
     scene.add(objectsGroups.tower)
     scene.add(objectsGroups.stones)
     scene.add(objectsGroups.beach)
+    scene.add(objectsGroups.map)
+    scene.add(objectsGroups.history)
+    scene.add(objectsGroups.xMap)
 }
 
 // Load gltf models
@@ -271,7 +274,7 @@ export const loadModels = (path, group) => {
     })
 }
 
-
+// Objects of scene
 // Ship
 objectsGroups.ship.scale.set(0.3781,0.3781,0.3781)
 objectsGroups.ship.position.set(-1.65482,0,0)
@@ -293,11 +296,23 @@ objectsGroups.stones.position.set(-6.14124557016479,0,11)
 objectsGroups.beach.scale.set(3,1,3)
 objectsGroups.beach.position.set(1.6856249143075364,0,0)
 
+// Map
+objectsGroups.map.scale.set(0.2,0.2,0.2)
+objectsGroups.map.position.set(0.75024, 0.17, -0.15166)
+objectsGroups.map.rotation.set(0,4.05717,0)
 
-// Objects of scene
+// Map: History
+objectsGroups.history.scale.set(0.03345,0.03345,0.03345)
+objectsGroups.history.position.set(0.8066,0.17,0.20534)
+objectsGroups.history.rotation.set(0, 0.89236, 0)
+
+// Map: X
+objectsGroups.xMap.scale.set(0.07,0.07,0.07)
+objectsGroups.xMap.position.set(0.78,0.20534,-0.22413)
+objectsGroups.xMap.rotation.set(0, 0.8066, 0)
+
 
 const sun = new THREE.Vector3();
-
 // Water
 water = new Water(
     new THREE.PlaneGeometry(100,100),
@@ -493,6 +508,7 @@ lightFolder.add(light1.position, "z")
     .name("LD pos z")
 */
 
+
 /*
 const cubeForDebugging = new THREE.Mesh(
     new THREE.BoxBufferGeometry(0.1,0.1,0.1,0.1),
@@ -551,14 +567,60 @@ const cubeForDebugging = new THREE.Mesh(
     .onChange(() => {
       camera.updateProjectionMatrix()
     })
+*/
+    
 
-gui.add(objectsGroups.ship.position, "x")
-    .name("ship x")
-    .min(-50)
-    .max(20)
-    .step(0.00001)
+gui.add(objectsGroups.xMap.position, "x")
+.min(-10)
+.max(10)
+.step(0.00001)
+.name("history x")
 
-    */
+gui.add(objectsGroups.xMap.position, "y")
+.min(-10)
+.max(10)
+.step(0.00001)
+.name("history y")
+
+gui.add(objectsGroups.xMap.position, "z")
+.min(-10)
+.max(10)
+.step(0.00001)
+.name("history z")
+gui.add(objectsGroups.xMap.rotation, "x")
+.min(-10)
+.max(10)
+.step(0.00001)
+.name("rot x")
+
+gui.add(objectsGroups.xMap.rotation, "y")
+.min(-10)
+.max(10)
+.step(0.00001)
+.name("rot y")
+
+gui.add(objectsGroups.xMap.rotation, "z")
+.min(-10)
+.max(10)
+.step(0.00001)
+.name("rot z")
+
+let scale = {
+    s: 0
+}
+gui.add(scale, "s")
+.min(-10)
+.max(10)
+.step(0.00001)
+.name("history scale")
+.onChange(()=>{
+    objectsGroups.xMap.scale.set(
+        scale.s,
+        scale.s,
+        scale.s
+    )
+})
+
 
 
 
@@ -589,8 +651,9 @@ export const fetchFloatPointsElements = () => {
     })
 
     floatPoints.push({
-        position: new THREE.Vector3(0.54892,0.29124,-0.91129),
+        position: new THREE.Vector3(0.40,0.29124,-0.50),
         element: document.querySelector(".float-point-3")
     })
+
 
 }
