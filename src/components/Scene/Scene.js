@@ -3,6 +3,7 @@ import {ContainerScene} from "./Scene.elements"
 import { SceneContainer, SceneWrapper, FloatPoint, FloatPointLabel, FloatPointText} from "./Style";
 import { initScene, cleanUpScene, loadGroups, loadModels, fetchFloatPointsElements, gsapAnimation} from "./Script";
 
+// Value of animations
 const animations = {
     pirateShip: {
         target: {

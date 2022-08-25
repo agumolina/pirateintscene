@@ -6,7 +6,6 @@ import * as dat from "dat.gui"
 import {gsap} from "gsap"
 import {Water} from "three/examples/jsm/objects/Water.js"
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
-import {FontLoader} from "three/examples/jsm/loaders/FontLoader.js"
 
 
 // Global variables
@@ -14,6 +13,7 @@ let currentRef = null
 let water
 
 // Timeline
+// Variables of time for animation with Gsap
 const timeline = new gsap.timeline({
     defaults: {
         duration: 1
@@ -62,6 +62,7 @@ renderer.toneMappingExposure = 1.5
 renderer.setPixelRatio(2) // Recomendado: 1 o 2
 
 //Resize canvas
+// Adjust canvas at the size of windows of client
 const resize = () => {
     renderer.setSize(currentRef.clientWidth, currentRef.clientHeight);
     camera.aspect = currentRef.clientWidth / currentRef.clientHeight;
@@ -71,6 +72,7 @@ const resize = () => {
 window.addEventListener("resize", resize);
 
 // OrbitControls
+// Controlated of camera in real time
 const orbitControls = new OrbitControls(camera,renderer.domElement)
 orbitControls.enableDamping = true
 orbitControls.target.set(1.15017,0.8066,0.46303)
@@ -143,6 +145,7 @@ const animate = () => {
     
     
     orbitControls.update()
+    // Renderer of the scene in real time
     renderer.render(scene,camera);
     requestAnimationFrame(animate);
 
@@ -151,6 +154,8 @@ animate();
 
 // Gsap Animation
 export const gsapAnimation = (targetPost, camPost, zoom) => {
+    // Animation to: From the current position it is animated to the desired position.
+    // "-=1.0" the animation is executed at the same time as the previous animation.
     timeline
     .to(orbitControls.target, {
         x: targetPost.x,
@@ -169,6 +174,7 @@ export const gsapAnimation = (targetPost, camPost, zoom) => {
 }
 
 // Reset Animation
+// Returns to the original camera position.
 export const resetAnimation = () => {
     let zoom = 1.0
     if(currentRef.clientWidth < 1000){
@@ -195,55 +201,17 @@ export const resetAnimation = () => {
 }
 
 
-// Controls
-/*
-let directionShip = 0
-
-window.addEventListener("keydown", function(event){
-    // Movement Z
-    if(event.key == "ArrowUp" | event.key == "keyW"){
-        console.log("Up")
-        //objectsGroups.ship.position.z += 0.1
-        directionShip = 0
-    }
-    if(event.key == "ArrowDown"){
-        console.log("Down")
-        //objectsGroups.ship.position.z -= 0.1
-        directionShip = Math.PI
-    }
-})
-
-window.addEventListener("keydown", function(event){
-    // Movement X
-    if(event.key == "ArrowLeft"){
-        console.log("Left")
-        objectsGroups.ship.rotation.set(
-            objectsGroups.ship.rotation._x,
-            objectsGroups.ship.rotation._y + 0.03,
-            objectsGroups.ship.rotation._z
-        )
-    }
-    if(event.key == "ArrowRight"){
-        console.log("Right")
-        objectsGroups.ship.rotation.set(
-            objectsGroups.ship.rotation._x,
-            objectsGroups.ship.rotation._y - 0.03,
-            objectsGroups.ship.rotation._z
-
-    }
-})
-*/
-
-
-
 // Loader
 const loadingManager = new THREE.LoadingManager(()=> {
     castShadow()
 })
+
+// Loader of the GLTF Models
 const gltfLoader = new GLTFLoader(loadingManager)
 
 // Cast and receive shadows
 const castShadow = () => {
+    // runs the entire scene and set objects with: cast and receive shadows
     scene.traverse((child) => {
         if(child instanceof THREE.Mesh){
             child.castShadow = true
@@ -254,6 +222,7 @@ const castShadow = () => {
 }
 
 // Load groups
+// Add all objects at the scene
 export const loadGroups = () => {
     scene.add(objectsGroups.ship)
     scene.add(objectsGroups.palms)
@@ -381,6 +350,7 @@ updateSun();
 // Lights
 const light1 = new THREE.DirectionalLight(0xffffff, 0.5)
 light1.castShadow = true
+// Resolution of shadows
 light1.shadow.mapSize.set(1024,1024)
 light1.shadow.bias = -0.000131
 light1.position.set(4.4784, 10, 4.9108)
@@ -454,44 +424,6 @@ const cameraFolder = gui.addFolder("Camera")
     })
 
 
-const ship = {
-    posX: 0,
-    posY: 0,
-    posZ: 0,
-    scale: 1,
-}
-const objectsFolder = gui.addFolder("Objects")
-const shipFolder = objectsFolder.addFolder("Ship")
-    shipFolder.add(objectsGroups.ship.position, "x")
-    .min(-15)
-    .max(15)
-    .name("pos x")
-    .step(0.0001)
-    shipFolder.add(objectsGroups.ship.position, "y")
-    .min(-15)
-    .max(15)
-    .name("pos y")
-    .step(0.0001)
-    shipFolder.add(objectsGroups.ship.position, "z")
-    .min(-15)
-    .max(15)
-    .name("pos z")
-    .step(0.0001)
-    shipFolder.add(ship, "scale")
-    .min(0)
-    .max(3)
-    .name("scale")
-    .step(0.0001)
-    .onChange(()=> {
-        objectsGroups.ship.scale.set(ship.scale,ship.scale,ship.scale)
-    })
-    shipFolder.add(objectsGroups.ship.rotation, "y")
-    .min(0)
-    .max(7)
-    .name("rotation y")
-    .step(0.0001)
- 
-
 const waterUniforms = water.material.uniforms;
 
 const waterFolder = gui.addFolder( 'Water' );
@@ -525,120 +457,6 @@ lightFolder.add(light1.position, "z")
 */
 
 
-/*
-const cubeForDebugging = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(0.1,0.1,0.1,0.1),
-    new THREE.MeshBasicMaterial({color: 0xff0000})
-  )
-  
-  scene.add(cubeForDebugging)
-  
-  // target
-  gui.add(cubeForDebugging.position, "x")
-    .min(-10)
-    .max(10)
-    .step(0.00001)
-    .name("target x")
-    .onChange(()=>{
-      orbitControls.target.x = cubeForDebugging.position.x
-    })
-    gui.add(cubeForDebugging.position, "y")
-    .min(-10)
-    .max(10)
-    .step(0.00001)
-    .name("target y")
-    .onChange(()=>{
-      orbitControls.target.y = cubeForDebugging.position.y
-    })
-    gui.add(cubeForDebugging.position, "z")
-    .min(-10)
-    .max(10)
-    .step(0.00001)
-    .name("target z")
-    .onChange(()=>{
-      orbitControls.target.z = cubeForDebugging.position.z
-    })
-  
-  gui.add(camera.position, "x")
-    .name("Cam x")
-    .min(-10)
-    .max(10)
-    .step(0.00001)
-  gui.add(camera.position, "y")
-    .name("Cam y")
-    .min(-10)
-    .max(10)
-    .step(0.00001)
-  gui.add(camera.position, "z")
-    .name("Cam z")
-    .min(-10)
-    .max(10)
-    .step(0.00001)
-    
-  gui.add(camera, "zoom")
-    .name("Cam Zoom")
-    .min(-50)
-    .max(10)
-    .step(0.00001)
-    .onChange(() => {
-      camera.updateProjectionMatrix()
-    })
-*/
-    
-/*
-gui.add(objectsGroups.shovel.position, "x")
-.min(-10)
-.max(10)
-.step(0.00001)
-.name("history x")
-
-gui.add(objectsGroups.shovel.position, "y")
-.min(-10)
-.max(10)
-.step(0.00001)
-.name("history y")
-
-gui.add(objectsGroups.shovel.position, "z")
-.min(-10)
-.max(10)
-.step(0.00001)
-.name("history z")
-gui.add(objectsGroups.shovel.rotation, "x")
-.min(-10)
-.max(10)
-.step(0.00001)
-.name("rot x")
-
-gui.add(objectsGroups.shovel.rotation, "y")
-.min(-10)
-.max(10)
-.step(0.00001)
-.name("rot y")
-
-gui.add(objectsGroups.shovel.rotation, "z")
-.min(-10)
-.max(10)
-.step(0.00001)
-.name("rot z")
-
-let scale = {
-    s: 0
-}
-gui.add(scale, "s")
-.min(-10)
-.max(10)
-.step(0.00001)
-.name("history scale")
-.onChange(()=>{
-    objectsGroups.shovel.scale.set(
-        scale.s,
-        scale.s,
-        scale.s
-    )
-})
-*/
-
-
 
 // Init and mount the scene
 export const initScene = (mountRef) => {
@@ -655,6 +473,7 @@ export const cleanUpScene = () => {
 }
 
 
+// Add the float points (vector 3D + float point of Dom)
 export const fetchFloatPointsElements = () => {
     floatPoints.push({
         position: new THREE.Vector3(-1.59844,2.3527,0.03355),
